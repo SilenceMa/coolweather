@@ -30,6 +30,8 @@ import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.Utility;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,11 +79,12 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= 21) {
+
+       /* if (Build.VERSION.SDK_INT >= 21) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
+        }*/
         setContentView(R.layout.activity_weather);
         ButterKnife.bind(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -89,13 +92,13 @@ public class WeatherActivity extends AppCompatActivity {
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather", null);//获取weather数据
-        String bingPic = prefs.getString("bing_pic", null);
+        /*String bingPic = prefs.getString("bing_pic", null);
         if (bingPic != null) {
             //glide用于加载图片
             Glide.with(this).load(bingPic).into(bingPicImg);
         } else {
             loadBingPic();
-        }
+        }*/
 
         final String weatherId;
         if (weatherString != null) {
@@ -195,7 +198,7 @@ public class WeatherActivity extends AppCompatActivity {
         String degree = weather.now.temperature + "℃";
         String weatherInfo = weather.now.more.info;
         titleCity.setText(cityName);
-        titleUpdateTime.setText(updateTime);
+        titleUpdateTime.setText("更新于 " + updateTime);
         degreeText.setText(degree);
         weatherInfoText.setText(weatherInfo);
 
@@ -241,5 +244,13 @@ public class WeatherActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    public String getCurrentTime() {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
+        String dateCurrent = simpleDateFormat.format(date);
+        String time = dateCurrent.substring(9, 14);
+        return time;
     }
 }
